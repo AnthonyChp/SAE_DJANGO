@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+      {% block title %}
+        <title>Bibliotheque local</title>
+      {% endblock %}
+
+      {% load static %}
+      <link rel="stylesheet" href="{% static 'css/style.css' %}">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css">
+  </head>
+  <body>
+      {% block menu %}
+
+      <div class="rectangle">
+        <h1>R&T D___evelopment</h1>
+        <div id="account"></div>
+        <div id="langue">FR <div>EN</div></div>
+        <nav>
+            <ul>
+                <li><a href="#Presentation">Mon compte</a></li>
+                <li><a href="#Connaissances">Nos services</a></li>
+                <li><a href="#Projets">Nous contacter</a></li>
+                <li><a href="#">À propos</a></li>
+            </ul>
+        </nav>        
+    </div>
+      {% endblock %}
+
+      {% block content %}
+      <div class="rectangle2"></div>
+
+      <div class="rectangle3">
+          <h1>Nos se__rvices</h1>
+      </div>
+  
+      <div class="carre">
+          <div id="carre1"></div>
+          <div id="carre2"></div>
+          <div id="carre3"></div>
+      </div>
+  
+      <div class="rectangle4">
+          <div class="rectangle5">
+              <h1>Nous co__ntacter</h1>
+          </div>
+          <div class="contact-info">
+              <div class="card">
+                <i class="card-icon far fa-envelope"></i>
+                <p>RTDevelopment@sae.com</p>
+              </div>
+        
+              <div class="card">
+                <i class="card-icon fas fa-phone"></i>
+                <p>+000000000000</p>
+              </div>
+        
+              <div class="card">
+                <i class="card-icon fas fa-map-marker-alt"></i>
+                <p>Châtellerault, FRA</p>
+              </div>
+            </div>
+      </div>
+      {% endblock %}
+
+      {% block footer %}
+      <footer>
+        <p>Suivez-nous sur <a href="https://www.instagram.com/anthony_chap" target="_blank">Instagram</a></p>
+        <p>Copyright &copy; R&T Development</p>
+    </footer>
+      {% endblock %}
+  </body>
+</html>

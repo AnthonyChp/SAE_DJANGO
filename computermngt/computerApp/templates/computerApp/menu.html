@@ -1,0 +1,37 @@
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+      {% block title %}
+        <title>Menu</title>
+      {% endblock %}
+
+      {% load static %}
+      <link rel="stylesheet" href="{% static 'css/menu.css' %}">
+
+  </head>
+  {% block menu %}
+  <body>
+    <div class="menu">
+        <ul>
+          {% load static %}
+          <li><a href="#"><img src="{% static 'computerApp/images/ordi_blanc.png' %}">Dashboard</a></li>
+          <li><a href="menu/test.html"><img src="{% static 'computerApp/images/usine_blanc.png' %}">Infrastructure</a></li>
+          <li><a href="#"><img src="{% static 'computerApp/images/ordi_blanc.png' %}">Entretient</a></li>
+          <li><a href="#"><img src="{% static 'computerApp/images/add_blanc.png' %}">Ajout</a></li>
+        </ul>
+      </div>
+    {% endblock %}
+    {% block titre_page %}
+      <div class="content">
+        <h1>DashBoard</h1>
+    {% endblock %}
+    {% block content %}
+        <p>...</p>
+    {% endblock %}
+      </div>
+    </body>
+  </body>
+  </html>

@@ -1,0 +1,50 @@
+.menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px; 
+    height: 100%; 
+    background-color: #D8C8B8; 
+  }
+  
+.menu ul {
+    padding: 0;
+    margin: 0;
+}
+
+.menu li {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+}
+
+.menu a {
+    text-decoration: none !important;
+    color: white;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.menu img {
+    max-width: 70%;
+    max-height: 70%;
+}
+
+.content {
+    margin-left: 200px; 
+}
+
+.content h1 {
+    text-align: center;
+}
+
+.carre {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 250px;
+    height: 250px;
+    background-color: rgb(117, 247, 117);
+    margin-top: 10px;
+}
