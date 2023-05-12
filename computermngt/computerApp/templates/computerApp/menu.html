@@ -9,25 +9,37 @@
       {% endblock %}
 
       {% load static %}
-      <link rel="stylesheet" href="{% static 'css/menu.css' %}">
+      <link rel="stylesheet" href="{% static '/css/menu.css' %}">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
   </head>
-  {% block menu %}
+
   <body>
-    <div class="menu">
-        <ul>
-          {% load static %}
-          <li><a href="#"><img src="{% static 'computerApp/images/ordi_blanc.png' %}">Dashboard</a></li>
-          <li><a href="menu/test.html"><img src="{% static 'computerApp/images/usine_blanc.png' %}">Infrastructure</a></li>
-          <li><a href="#"><img src="{% static 'computerApp/images/ordi_blanc.png' %}">Entretient</a></li>
-          <li><a href="#"><img src="{% static 'computerApp/images/add_blanc.png' %}">Ajout</a></li>
-        </ul>
+    {% block menu %}
+    <nav class="navbar navbar-inverse navbar-fixed-">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">R&T D___evelopment</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Overview</a></li>
+            <li><a href="#">Infrastructure</a></li>
+            <li><a href="#">Machines</a></li>
+            <li><a href="#">Ajout de machines</a></li>
+          </ul>
+        </div>
       </div>
+    </nav>
     {% endblock %}
-    {% block titre_page %}
-      <div class="content">
-        <h1>DashBoard</h1>
-    {% endblock %}
+
     {% block content %}
         <p>...</p>
     {% endblock %}

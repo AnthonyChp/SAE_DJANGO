@@ -4,18 +4,49 @@
 <h1>Liste des machines</h1>
 
 {% if machines %}
-    <ul>
+    <div class="row">
         {% for machine in machines %}
-            <li>
-                <a href="{% url 'machine-detail' machine.id %}"><div class="carre">
-                    <p>
-                        {{ machine.id }} ({{ machine.nom }})</p>
-                </div></a>
-            </li>
+            <div class="col-md-4 mb-3">
+                    <div class="card border">
+                        <div class="card-body text-center">
+                            <div class="square">
+                                <a href="{% url 'machine-detail' machine.id %}">
+                                <p class="mb-0">{{ machine.nom }}</p>
+                                <p class="mb-0">{{ machine.id }}</p>
+                            </a>
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            {% if forloop.counter|divisibleby:3 %}
+                </div><div class="row">
+            {% endif %}
         {% endfor %}
-    </ul>
+    </div>
 {% else %}
     <p>Il n'y a pas de machine.</p>
 {% endif %}
+
+<style>
+    .square {
+        width: 50%;
+        padding-top: 50%;
+        background-color: #f7f7f7;
+        position: relative;
+        margin-top: 3%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .square p {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-weight: bold;
+    }
+</style>
 
 {% endblock %}

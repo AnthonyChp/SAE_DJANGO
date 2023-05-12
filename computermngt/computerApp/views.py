@@ -29,6 +29,13 @@ def test(request):
 	}
 	return render(request, 'computerApp/gerer/test.html',context)
 
+def ajouter_machine(request):
+	machines = Machine.objects.all()
+	context = {
+		'machines': machines
+	}
+	return render(request, 'computerApp/gerer/ajouter_machine.html',context)
+
 def machine_list_view(request) :
 	machines = Machine.objects.all()
 	context = {
