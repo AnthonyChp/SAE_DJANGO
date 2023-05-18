@@ -15,9 +15,11 @@ def index(request) :
 def menu(request):
 
 	machines = Machine.objects.all()
+	machines_count = Machine.objects.count()
 	#Que l'on passe en parametre de la page html via la syntaxe suivante
 	context = {
 		'machines' : machines,
+		'machines_count': machines_count
 	}
 
 	return render(request, 'computerApp/menu.html', context)
