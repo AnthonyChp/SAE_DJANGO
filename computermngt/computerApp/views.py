@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from computerApp.models import Machine
+from computerApp.models import Machine,Personnel
 from .forms import AddMachineForm
 
 # Create your views here.
@@ -15,11 +15,11 @@ def index(request) :
 def menu(request):
 
 	machines = Machine.objects.all()
-	machines_count = Machine.objects.count()
+	users = Personnel.objects.all()
 	#Que l'on passe en parametre de la page html via la syntaxe suivante
 	context = {
 		'machines' : machines,
-		'machines_count': machines_count
+		'users' : users
 	}
 
 	return render(request, 'computerApp/menu.html', context)
