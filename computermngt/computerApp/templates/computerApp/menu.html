@@ -126,7 +126,7 @@
                 <thead>
 
                   <tr>
-                    <th>Nom</th>
+                    <th>Nom - Prénom</th>
                     <th>Adresse e-mail</th>
                     <th>Rôle</th>
                     <th>Date de création</th>
@@ -135,25 +135,22 @@
                 </thead>
                 <tbody>
 
+                  {% for user in users %}
+                  <tr>
+                    <td>{{ user.nom }} {{ user.prenom }}</td>
+                    <td>{{ user.email}}</td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  {% endfor %}
+
+
+
                   <tr>
                     <td>Utilisateur 1</td>
                     <td>user1@example.com</td>
                     <td>Resp. Paris</td>
                     <td>2021-01-01</td>
-                  </tr>
-
-                  <tr>
-                    <td>Utilisateur 2</td>
-                    <td>user2@example.com</td>
-                    <td>Resp. Poitiers</td>
-                    <td>2021-02-01</td>
-                  </tr>
-
-                  <tr>
-                    <td>Utilisateur 3</td>
-                    <td>user3@example.com</td>
-                    <td>Employé</td>
-                    <td>2021-02-01</td>
                   </tr>
 
                 </tbody>
@@ -182,38 +179,29 @@
                 </thead>
                 <tbody>
 
+                  {% for machine in machines %}
                   <tr>
-                    <td>Machine 1</td>
-                    <td><span class="online"></span> En ligne</td>
-                    <td><span class="online"></span> Ok</td>
-                    <td>User 2</td>
-                    <td>2021-01-05</td>
-                  </tr>
+                    <td>{{ machine.nom }}</td>
 
-                  <tr>
-                    <td>Machine 2</td>
-                    <td><span class="offline"></span> Hors ligne</td>
-                    <td><span class="afaire"></span> A faire </td>
-                    <td>User 1</td>
-                    <td>2021-01-01</td>
+                    {% if machine.etat == True %}
+                      <td><span class="online"></span> En ligne</td>
+                    {% else %}
+                      <td><span class="offline"></span> Hors ligne</td>
+                    {% endif %}
+                    <td>{{machine.maintenanceDate}}</td>
+                    <td>{{machine.appartient}}</td>
+                    <td>{{machine.creation}}</td>
                   </tr>
-
-                  <tr>
-                    <td>Machine 3</td>
-                    <td><span class="offline"></span> Hors ligne</td>
-                    <td><span class="offline"></span> Urgent ! </td>
-                    <td>User 1</td>
-                    <td>2021-01-01</td>
-                  </tr>
+                  {% endfor %}
 
                 </tbody>
-                
               </table>
             </div>
           </div>
         </div>
       </div>
     </div>
+
   
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
