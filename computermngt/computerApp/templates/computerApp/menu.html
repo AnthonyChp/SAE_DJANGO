@@ -29,13 +29,15 @@
             <li class="active"><a href="">Overview</a></li>
             <li><a href="#">Infrastructure</a></li>
             <li><a href="#">Utilisateurs</a></li>
-            <li><a href="#">Ajout de machines</a></li>
+            <li><a href="menu/add-machine">Ajout de machines</a></li>
             <li><a href="#">Machines</a></li>
           </ul>
         </div>
       </div>
     </nav>
     {%endblock%}
+
+    {%block content%}
 
     <div class="container">
       <h1>Tableau de bord - Overview</h1>
@@ -201,6 +203,7 @@
         </div>
       </div>
     </div>
+    {%endblock%}
 
   
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
