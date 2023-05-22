@@ -27,9 +27,9 @@
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
             <li class="active"><a href="">Overview</a></li>
-            <li><a href="#">Infrastructure</a></li>
-            <li><a href="#">Utilisateurs</a></li>
-            <li><a href="menu/add-machine">Ajout de machines</a></li>
+            <li><a href="../computerApp/menu/gestion-infra">Infrastructure</a></li>
+            <li><a href="../computerApp/menu/gestion-user">Utilisateurs</a></li>
+            <li><a href="../computerApp/menu/gestion-machines">Gestion de machines</a></li>
             <li><a href="#">Machines</a></li>
           </ul>
         </div>
@@ -37,8 +37,7 @@
     </nav>
     {%endblock%}
 
-    {%block content%}
-
+    {% block content%}
     <div class="container">
       <h1>Tableau de bord - Overview</h1>
       
@@ -47,8 +46,8 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Machines</h5>
-              <p class="card-text">Nombre total de machines : <span id="totalMachines">{{ machine_count }}</span></p>
-              <p class="card-text">Machines actives : <span id="activeMachines">8</span></p>
+              <p class="card-text">Nombre total de machines : <span id="totalMachines">{{ count_machi }}</span></p>
+              <p class="card-text">Machines actives : <span id="activeMachines">{{count_onMach}}</span></p>
             </div>
           </div>
         </div>
@@ -57,8 +56,8 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Utilisateurs</h5>
-              <p class="card-text">Nombre total d'utilisateurs : <span id="totalUsers">20</span></p>
-              <p class="card-text">Nombre total de responsable : <span id="activeUsers">2</span></p>
+              <p class="card-text">Nombre total d'utilisateurs : <span id="totalUsers">{{count_user}}</span></p>
+              <p class="card-text">Nombre total de responsable : <span id="activeUsers">{{count_rep}}</span></p>
             </div>
           </div>
         </div>
@@ -67,8 +66,11 @@
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">Infrastructure</h5>
-              <p class="card-text">Poitiers</p>
-              <p class="card-text">Paris</p>
+
+              {% for infra in infras %}
+              <p class="card-text">{{infra.nom}}</p>
+              {% endfor %}
+
             </div>
           </div>
         </div>
@@ -91,6 +93,7 @@
               <h5 class="card-title">Infrastructure</h5>
               <table class="table">
                 <thead>
+
                   <tr>
                     <th>Nom</th>
                     <th>État</th>
@@ -98,22 +101,22 @@
                     <th>Date de création</th>
                   </tr>
                 </thead>
+
                 <tbody>
 
+                  {% for infra in infras %}
                   <tr>
-                    <td>Poitiers</td>
-                    <td><span class="online"></span> En ligne</td>
-                    <td>2021-01-05</td>
-                    <td>2021-01-05</td>
+                    <td>{{infra.nom}}</td>
+                    {% if infra.etat == True %}
+                      <td><span class="online"></span> En ligne</td>
+                    {% else %}
+                      <td><span class="offline"></span> Hors ligne</td>
+                    {% endif %}
+                    <td>{{infra.maintenanceDate}}</td>
+                    <td>{{infra.crea}}</td>
                   </tr>
-
-                  <tr>
-                    <td>Paris</td>
-                    <td><span class="online"></span> En ligne</td>
-                    <td>2021-01-05</td>
-                    <td>2021-01-01</td>
-                  </tr>
-
+                  {% endfor %}
+                  
                 </tbody>
               </table>
             </div>
@@ -141,19 +144,15 @@
                   <tr>
                     <td>{{ user.nom }} {{ user.prenom }}</td>
                     <td>{{ user.email}}</td>
-                    <td></td>
-                    <td></td>
+
+                    {% if user.infrastructure == None %}
+                      <td>{{ user.role }}</td>
+                    {% else %}
+                      <td>{{ user.role }}{{ user.infrastructure }}</td>
+                    {% endif %}
+                    <td>{{user.crea}}</td>
                   </tr>
                   {% endfor %}
-
-
-
-                  <tr>
-                    <td>Utilisateur 1</td>
-                    <td>user1@example.com</td>
-                    <td>Resp. Paris</td>
-                    <td>2021-01-01</td>
-                  </tr>
 
                 </tbody>
               </table>
@@ -203,12 +202,13 @@
         </div>
       </div>
     </div>
-    {%endblock%}
+  {%endblock%}
 
-  
+  {% block Script %}
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  {%endblock%}
 
 
 

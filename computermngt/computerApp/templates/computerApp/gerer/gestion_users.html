@@ -1,0 +1,50 @@
+{% extends "computerApp/menu.html"%}
+
+{% block navbar%}
+    <nav class="navbar navbar-inverse navbar-fixed-">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="../menu">R&T D___evelopment</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="../menu">Overview</a></li>
+            <li><a href="../menu/gestion-infra">Infrastructure</a></li>
+            <li><a href="">Utilisateurs</a></li>
+            <li><a href="../menu/gestion-machines">Gestion de machines</a></li>
+            <li><a href="#">Machines</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+{%endblock%}
+
+{% block content %}
+<div class="container">
+  <h1 class="mt-5 text-center">Gestion du Personnel</h1>
+  <div class="row">
+    {% for user in users %}
+    <div class="col-md-4">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h5 class="card-title">{{ user.nom }} {{user.prenom}}</h5>
+          <p class="card-text">Infrastructure : {{ user.infrastructure }}</p>
+          <p class="card-text">Statut : {% if user.role == 'Resp.' %} {{user.role}} {{user.infrastructure}}{% else %}{{user.role}} à {{user.infrastructure}}{% endif %}</p>
+          <p class="card-text">Contact : {{ user.email }}</p>
+          <p class="card-text">Date de création : {{ user.crea }}</p>
+          <div class="text-center">
+          <a href="#" class="btn btn-primary">Voir</a>
+        </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
+

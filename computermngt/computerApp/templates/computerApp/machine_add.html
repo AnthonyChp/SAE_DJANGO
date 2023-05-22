@@ -1,31 +1,11 @@
-{%extends "computerApp/menu.html"%}
+{% extends "index.html"%}
 
-{% block content %}
-<div class="container">
-  <h1 class="mt-5">Ajouter une machine</h1>
-  <form method="post" class="my-4">
+{% block content%}
+
+<form method="post">
     {% csrf_token %}
-    <div class="mb-3">
-      <label for="{{ form.nom.id_for_label }}" class="form-label">Nom de la machine</label>
-      {{ form.nom }}
-    </div>
-    <div class="mb-3">
-      <label for="{{ form.maintenanceDate.id_for_label }}" class="form-label">Date de maintenance</label>
-      {{ form.maintenanceDate }}
-    </div>
-    <div class="mb-3">
-      <label for="{{ form.etat.id_for_label }}" class="form-label">État de la machine</label>
-      {{ form.etat }}
-    </div>
-    <div class="mb-3">
-      <label for="{{ form.mach.id_for_label }}" class="form-label">Type de machine</label>
-      {{ form.mach }}
-    </div>
-    <div class="mb-3">
-      <label for="{{ form.appartient.id_for_label }}" class="form-label">Appartient à</label>
-      {{ form.appartient }}
-    </div>
-    <button type="submit" class="btn btn-primary">Ajouter</button>
-  </form>
-</div>
-{% endblock %}
+    {{form.nom}}
+    <input type="submit" value="Submit">
+</form>
+
+{%endblock%}
