@@ -15,6 +15,7 @@ def index(request) :
 def menu(request):
 
 	machines = Machine.objects.all()
+	nb_mach = Machine.objects.count()
 	users = Personnel.objects.all()
 	#Que l'on passe en parametre de la page html via la syntaxe suivante
 	context = {
@@ -50,16 +51,27 @@ def machine_detail_view(request, pk):
 	context={'machine': machine}
 	return render(request, 'computerApp/machine_detail.html')
 
-
 def machine_add_form(request):
-	if request.method == 'POST':
-		form_1 = AddMachineForm(request.POST or None)
-		if form_1.is_valid():
-			new_machine = Machine(nom=form_1.cleaned_data['nom'])
-			new_machine.save()
-			return redirect('machines')
-
-	else :
-		form_2 = AddMachineForm()
-		context = {'form' : form_2}
-		return render(request,'computerApp/machine_add.html', context)
+    if request.method == 'POST':
+        form = AddMachineForm(request.POST)
+        if form.is_valid():
+            nom = form.cleaned_data['nom']
+            maintenance_date = form.cleaned_data['maintenanceDate']
+            etat = form.cleaned_data['etat']
+            mach = form.cleaned_data['mach']
+            appartient = form.cleaned_data['appartient']
+            
+            new_machine = Machine(
+                nom=nom,
+                maintenanceDate=maintenance_date,
+                etat=etat,
+                mach=mach,
+                appartient=appartient
+            )
+            new_machine.save()
+            form = AddMachineForm()
+            return redirect('menu')
+    else:
+        form = AddMachineForm()
+    
+    return render(request, 'computerApp/machine_add.html', {'form': form})
