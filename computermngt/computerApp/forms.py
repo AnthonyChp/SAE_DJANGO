@@ -24,3 +24,18 @@ class AddMachineForm(forms.Form):
 
 class DeleteMachineForm(forms.Form):
    machine = forms.ModelChoiceField(queryset=Machine.objects.all(), label='Machine à supprimer')
+
+
+class AddUserForm(forms.Form):
+   ROLES = (
+      ('Resp.', 'Resp.'),
+      ('Employé', 'Employé'),
+     )
+   
+   nom = forms.CharField(required=True, label='Nom de l\'utilisateur')
+   prenom = forms.CharField(required=True, label='Prénom de l\'utilisateur')
+   role = forms.ChoiceField(choices=ROLES, required=False)
+   infrastructure = forms.ModelChoiceField(queryset=Infrastructure.objects.all(), required=True, label='Dans quel infrastructure')
+
+class DeleteUserForm(forms.Form):
+   user = forms.ModelChoiceField(queryset=Personnel.objects.all(), label='Utilisateur à supprimer')

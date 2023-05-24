@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from computerApp.models import Machine,Personnel, Infrastructure
-from .forms import AddMachineForm, DeleteMachineForm
+from .forms import AddMachineForm, DeleteMachineForm, AddUserForm, DeleteUserForm
 from django.http import JsonResponse
 
 # Create your views here.
@@ -59,6 +59,7 @@ def machine_gestion_form(request):
                 appartient=appartient,
                 infra=infra
             )
+
             new_machine.save()
             form = AddMachineForm()
     
@@ -81,6 +82,38 @@ def machine_gestion_form(request):
     
     return render(request, 'computerApp/gerer/gestion_machines.html', context)
 
+def user_gestion_form(request):
+     users = Personnel.objects.all()
+
+     if request.method == 'POST':
+        form = AddUserForm(request.POST)
+
+        if form.is_valid():
+            nom = form.cleaned_data['nom']
+            prenom = form.cleaned_data['prenom']
+            role = form.cleaned_data['role']
+            infrastructure = form.cleaned_data['infrastructure']
+           
+            new_user = Personnel(
+                nom=nom,
+                prenom=prenom,
+                role=role,
+                infrastructure=infrastructure,
+            )
+
+            new_user.save()
+            form = AddUserForm()
+
+        return redirect('menu')
+     
+     else:
+        form = AddUserForm()
+
+     context = {
+		'users': users
+	}
+     
+     return render(request, 'computerApp/gerer/gestion_users.html',context)
 
 def infra_gestion_form(request):
      infras = Infrastructure.objects.all()
@@ -88,13 +121,6 @@ def infra_gestion_form(request):
 		'infras': infras
 	}
      return render(request, 'computerApp/gerer/gestion_infra.html',context)
-
-def user_gestion_form(request):
-     users = Personnel.objects.all()
-     context = {
-		'users': users
-	}
-     return render(request, 'computerApp/gerer/gestion_users.html',context)
 
 def ajouter_machine(request):
 	machines = Machine.objects.all()
@@ -114,7 +140,6 @@ def machine_detail_view(request, pk):
 	machine = get_object_or_404(Machine, id=pk)
 	context={'machine': machine}
 	return render(request, 'computerApp/machine_detail.html')
-
 
 def add_machine(request):
     if request.method == 'POST':
