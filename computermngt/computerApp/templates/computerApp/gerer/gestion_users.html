@@ -9,14 +9,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../menu">R&T D___evelopment</a>
+          <a class="navbar-brand" href="../../menu">R&T D___evelopment</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="../menu">Overview</a></li>
-            <li><a href="../menu/gestion-infra">Infrastructure</a></li>
+            <li class="active"><a href="../../menu">Overview</a></li>
+            <li><a href="../gestion-infra">Infrastructure</a></li>
             <li><a href="">Utilisateurs</a></li>
-            <li><a href="../menu/gestion-machines">Gestion de machines</a></li>
+            <li><a href="../gestion-machines">Gestion de machines</a></li>
             <li><a href="#">Machines</a></li>
           </ul>
         </div>
@@ -46,23 +46,51 @@
     {% endfor %}
   </div>
 </div>
+<hr>
 
 <div class="container">
   <div class="row justify-content-center align-items-center vh-100">
     <div class="col-md-6">
       <div class="card p-4">
-        <h1 class="mt-5 text-center">Ajouter un utilisateur</h1>
+        <h2 class="mt-5 text-center">Ajouter un utilisateur</h2>
         <form method="post" class="my-4">
           {% csrf_token %}
-          {{ form.as_p }}
+          <div class="mb-3">
+            <label for="{{ form.nom.id_for_label }}" class="form-label">Nom de l'utilisateur</label>
+            {{ form.nom }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.prenom.id_for_label }}" class="form-label">Prénom de l'utilisateur</label>
+            {{ form.prenom }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.role.id_for_label }}" class="form-label">Rôle</label>
+            {{ form.role }}
+          </div>
+          <div class="mb-3">
+            <label for="{{ form.infrastructure.id_for_label }}" class="form-label">Dans quel infrastructure</label>
+            {{ form.infrastructure }}
+          </div>
           <div class="text-center">
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
         </form>
       </div>
     </div>
-  </div>
-</div>
+
+    <div class="col-md-6">
+      <div class="card p-4">
+        <h2 class="mt-5 text-center">Supprimer un utilisateur</h2>
+        <form method="post" class="my-4">
+          {% csrf_token %}
+          {{ delete_form.user.label_tag }}
+          {{ delete_form.user }}
+          <br>
+          <div class="text-center">
+            <button type="submit" class="btn btn-danger">Supprimer</button>
+          </div>
+        </form>
+      </div>
 
 {% endblock %}
 

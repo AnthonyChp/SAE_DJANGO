@@ -27,9 +27,9 @@
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
             <li class="active"><a href="">Overview</a></li>
-            <li><a href="../computerApp/menu/gestion-infra">Infrastructure</a></li>
+            <li><a href="menu/gestion-infra">Infrastructure</a></li>
             <li><a href="../computerApp/menu/gestion-user">Utilisateurs</a></li>
-            <li><a href="../computerApp/menu/gestion-machines">Gestion de machines</a></li>
+            <li><a href="menu/gestion-machines">Gestion de machines</a></li>
             <li><a href="#">Machines</a></li>
           </ul>
         </div>
@@ -145,7 +145,7 @@
                     <td>{{ user.nom }} {{ user.prenom }}</td>
                     <td>{{ user.email}}</td>
 
-                    {% if user.infrastructure == None %}
+                    {% if user.role == 'Employé' %}
                       <td>{{ user.role }}</td>
                     {% else %}
                       <td>{{ user.role }}{{ user.infrastructure }}</td>
