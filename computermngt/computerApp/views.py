@@ -87,6 +87,7 @@ def user_gestion_form(request):
 
      if request.method == 'POST':
         form = AddUserForm(request.POST)
+        delete_form = DeleteUserForm(request.POST)
 
         if form.is_valid():
             nom = form.cleaned_data['nom']
@@ -104,13 +105,20 @@ def user_gestion_form(request):
             new_user.save()
             form = AddUserForm()
 
+        elif delete_form.is_valid():
+            user = delete_form.cleaned_data['user']
+            user.delete()
+        
         return redirect('menu')
-     
+    
      else:
         form = AddUserForm()
-
+        delete_form = DeleteUserForm()
+    
      context = {
-		'users': users
+		'users': users,
+        'form' : form,
+        'delete_form': delete_form
 	}
      
      return render(request, 'computerApp/gerer/gestion_users.html',context)
@@ -129,29 +137,11 @@ def ajouter_machine(request):
 	}
 	return render(request, 'computerApp/gerer/ajouter_machine.html',context)
 
-def machine_list_view(request) :
+def machines(request) :
+	#On récupère l'ensemble des machines de la database
 	machines = Machine.objects.all()
+	#Que l'on passe en parametre de la page html via la syntaxe suivante
 	context = {
-		'machines': machines
+		'machines' : machines,
 	}
-	return render(request, 'computerApp/machine_list.html',context)
-
-def machine_detail_view(request, pk):
-	machine = get_object_or_404(Machine, id=pk)
-	context={'machine': machine}
-	return render(request, 'computerApp/machine_detail.html')
-
-def add_machine(request):
-    if request.method == 'POST':
-        form = AddMachineForm(request.POST)
-        if form.is_valid():
-            # Traitement lorsque le formulaire est valide
-            new_machine = Machine(nom=form.cleaned_data['nom'])
-            new_machine.save()
-            return redirect('machines')
-    else:
-        # Création d'une instance du formulaire pour afficher la page initiale
-        form = AddMachineForm()
-    
-    # Le formulaire n'est pas valide ou c'est la première visite à la page, afficher le formulaire
-    return render(request, 'menu/test', {'form': form})
+	return render(request, 'computerApp/gerer/machines.html', context)

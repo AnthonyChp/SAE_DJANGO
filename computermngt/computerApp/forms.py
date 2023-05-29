@@ -38,4 +38,4 @@ class AddUserForm(forms.Form):
    infrastructure = forms.ModelChoiceField(queryset=Infrastructure.objects.all(), required=True, label='Dans quel infrastructure')
 
 class DeleteUserForm(forms.Form):
-   user = forms.ModelChoiceField(queryset=Personnel.objects.all(), label='Utilisateur à supprimer')
+    user = forms.ModelChoiceField(queryset=Personnel.objects.all(), label='Utilisateur à supprimer')
