@@ -1,0 +1,8 @@
+Lorsqu'on est admin ou compte resp on peut turn out les infras sinon message erreur
+
+page de profils avec toutes les machines de l'utilisateur si il est resp on affiche auss 
+les infras afin de pouvoir les shutdown
+
+admin -> peut changer le role d'un user
+
+ajout de la page profils ducoup
