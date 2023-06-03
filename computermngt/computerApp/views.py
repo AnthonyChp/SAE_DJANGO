@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from computerApp.models import Machine,Personnel, Infrastructure
-from .forms import AddMachineForm, DeleteMachineForm, AddUserForm, DeleteUserForm
+from .forms import AddMachineForm, DeleteMachineForm, AddUserForm, DeleteUserForm, MachineForm
 from django.http import JsonResponse
 
 # Create your views here.
@@ -137,11 +137,19 @@ def ajouter_machine(request):
 	}
 	return render(request, 'computerApp/gerer/ajouter_machine.html',context)
 
-def machines(request) :
-	#On récupère l'ensemble des machines de la database
-	machines = Machine.objects.all()
-	#Que l'on passe en parametre de la page html via la syntaxe suivante
-	context = {
-		'machines' : machines,
-	}
-	return render(request, 'computerApp/gerer/machines.html', context)
+def machines(request):
+    form = MachineForm()  # Créez une instance du formulaire en dehors du bloc if
+    
+    if request.method == 'POST':
+        form = MachineForm(request.POST)
+        if form.is_valid():
+            form.save()
+    
+    machines = Machine.objects.all()
+    
+    context = {
+        'machines': machines,
+        'form': form,
+    }
+    
+    return render(request, 'computerApp/gerer/machines.html', context)

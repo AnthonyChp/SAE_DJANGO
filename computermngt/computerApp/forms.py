@@ -39,3 +39,22 @@ class AddUserForm(forms.Form):
 
 class DeleteUserForm(forms.Form):
     user = forms.ModelChoiceField(queryset=Personnel.objects.all(), label='Utilisateur à supprimer')
+
+class MachineForm(forms.ModelForm):
+    entretien_effectue = forms.BooleanField(required=False)
+
+    class Meta:
+        model = Machine
+        fields = ['nom', 'infra', 'etat', 'mach', 'maintenanceDate']
+
+    def save(self, commit=True):
+        machine = super().save(commit=False)
+
+        entretien_effectue = self.cleaned_data.get('entretien_effectue', False)
+        if entretien_effectue:
+            machine.maintenanceDate += timedelta(days=7)
+
+        if commit:
+            machine.save()
+
+        return machine

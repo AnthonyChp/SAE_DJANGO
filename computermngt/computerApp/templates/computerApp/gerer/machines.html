@@ -9,14 +9,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../../menu">R&T D___evelopment</a>
+          <a class="navbar-brand" href="../menu">R&T D___evelopment</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="../../menu">Overview</a></li>
-            <li><a href="../gestion-infra">Infrastructure</a></li>
-            <li><a href="">Utilisateurs</a></li>
-            <li><a href="../gestion-machines">Gestion de machines</a></li>
+            <li class="active"><a href="../menu">Overview</a></li>
+            <li><a href="../menu/gestion-infra">Infrastructure</a></li>
+            <li><a href="../menu/gestion-user">Utilisateurs</a></li>
+            <li><a href="../menu/gestion-machines">Gestion de machines</a></li>
             <li><a href="#">Machines</a></li>
           </ul>
         </div>
@@ -58,12 +58,13 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <div class="modal-body">
-          <h5>{{ machine.nom }}</h5>
+        <div class="modal-body text-center">
+          <h3>{{ machine.nom }}</h3>
           <p>Infrastructure: {{ machine.infra }}</p>
           <p>Statut: {% if machine.etat %}<span class="online"></span> En ligne {% else %}<span class="offline"></span> Hors ligne {% endif %}</p>
-          <p>Type de machine: {{ machine.mach }}</p>
-          <p>Date de création: {{ machine.creation }}</p>
+          <p>Appartient à  {{machine.appartient}}</p>
+          <p>Date de l'entretient : {{machine.maintenanceDate}}</p>
+          <button type="submit" class="btn btn-primary">Faire l'entretient</button>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -71,5 +72,6 @@
       </div>
     </div>
   </div>
-  {% endfor %}
+{% endfor %}
+
 {%endblock%}
