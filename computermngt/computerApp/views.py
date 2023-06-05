@@ -3,6 +3,7 @@ from computerApp.models import Machine,Personnel, Infrastructure
 from .forms import AddMachineForm, DeleteMachineForm, AddUserForm, DeleteUserForm, MachineForm
 from django.http import JsonResponse
 
+
 # Create your views here.
 def index(request) :
 	#On récupère l'ensemble des machines de la database
@@ -13,28 +14,48 @@ def index(request) :
 	}
 	return render(request, 'index.html', context)
 
+machine_crea = False 
+machine_del = False 
+user_crea = False 
+user_del = False 
+
 def menu(request):
+    machines = Machine.objects.all()
+    users = Personnel.objects.all()
+    infras = Infrastructure.objects.all()
+    count_user = Personnel.objects.count()
+    count_rep = Personnel.objects.filter(role='Resp.').count()
+    count_machi = Machine.objects.count()
+    count_onMach = Machine.objects.filter(etat=True).count()
 
-	machines = Machine.objects.all()
-	users = Personnel.objects.all()
-	infras = Infrastructure.objects.all()
-	count_user = Personnel.objects.count()
-	count_rep = Personnel.objects.filter(role='Resp.').count()
-	count_machi = Machine.objects.count()
-	count_onMach = Machine.objects.filter(etat=True).count()
+    # Récupérer la valeur des variables depuis la session
+    machine_crea = request.session.get('machine_crea', False)
+    machine_del = request.session.get('machine_del', False)
+    user_crea = request.session.get('user_crea', False)
+    user_del = request.session.get('user_del', False)
 
-	#Que l'on passe en parametre de la page html via la syntaxe suivante
-	context = {
-		'machines' : machines,
-		'users' : users,
-		'infras' : infras,
-		'count_user' : count_user,
-		'count_rep' : count_rep,
-		'count_machi' : count_machi,
-		'count_onMach' : count_onMach,
-	}
+    # Réinitialiser les variable à False dans la session
+    request.session['machine_crea'] = False
+    request.session['machine_del'] = False
+    request.session['user_crea'] = False
+    request.session['user_del'] = False
 
-	return render(request, 'computerApp/menu.html', context)
+    context = {
+        'machines': machines,
+        'users': users,
+        'infras': infras,
+        'count_user': count_user,
+        'count_rep': count_rep,
+        'count_machi': count_machi,
+        'count_onMach': count_onMach,
+        'machine_crea': machine_crea,
+        'machine_del' : machine_del,
+        'user_crea': user_crea,
+        'user_del' : user_del,
+    }
+
+    return render(request, 'computerApp/menu.html', context)
+
 
 def machine_gestion_form(request):
     machines = Machine.objects.all()
@@ -62,11 +83,13 @@ def machine_gestion_form(request):
 
             new_machine.save()
             form = AddMachineForm()
+            request.session['machine_crea'] = True
     
         elif delete_form.is_valid():
             machine_id = delete_form.cleaned_data['machine']
-            machine = get_object_or_404(Machine, nom = machine_id)
+            machine = get_object_or_404(Machine, nom=machine_id)
             machine.delete()
+            request.session['machine_del'] = True
         
         return redirect('menu')
     
@@ -77,10 +100,14 @@ def machine_gestion_form(request):
     context = {
         'form': form,
         'delete_form': delete_form,
-        'machines': machines
+        'machines': machines,
+        'machine_crea': request.session.get('machine_crea', False),
+        'machine_del': request.session.get('machine_del', False),
     }
     
     return render(request, 'computerApp/gerer/gestion_machines.html', context)
+
+
 
 def user_gestion_form(request):
      users = Personnel.objects.all()
@@ -104,10 +131,12 @@ def user_gestion_form(request):
 
             new_user.save()
             form = AddUserForm()
+            request.session['user_crea'] = True
 
         elif delete_form.is_valid():
             user = delete_form.cleaned_data['user']
             user.delete()
+            request.session['user_del'] = True
         
         return redirect('menu')
     
@@ -118,7 +147,9 @@ def user_gestion_form(request):
      context = {
 		'users': users,
         'form' : form,
-        'delete_form': delete_form
+        'delete_form': delete_form,
+        'user_crea': request.session.get('user_crea', False),
+        'user_del': request.session.get('user_del', False),
 	}
      
      return render(request, 'computerApp/gerer/gestion_users.html',context)
