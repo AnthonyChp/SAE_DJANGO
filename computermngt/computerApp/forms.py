@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from computerApp.models import Machine,Personnel, Infrastructure
 from datetime import datetime, timedelta
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class AddMachineForm(forms.Form):
@@ -25,7 +26,6 @@ class AddMachineForm(forms.Form):
 class DeleteMachineForm(forms.Form):
    machine = forms.ModelChoiceField(queryset=Machine.objects.all(), label='Machine à supprimer')
 
-
 class AddUserForm(forms.Form):
    ROLES = (
       ('Resp.', 'Resp.'),
@@ -41,6 +41,7 @@ class DeleteUserForm(forms.Form):
     user = forms.ModelChoiceField(queryset=Personnel.objects.all(), label='Utilisateur à supprimer')
 
 class MachineForm(forms.ModelForm):
+
     entretien_effectue = forms.BooleanField(required=False)
 
     class Meta:
@@ -58,3 +59,7 @@ class MachineForm(forms.ModelForm):
             machine.save()
 
         return machine
+
+class LoginForm(forms.Form):
+    username = forms.CharField(label='Nom d\'utilisateur')
+    password = forms.CharField(label='Mot de passe', widget=forms.PasswordInput)

@@ -1,6 +1,9 @@
 from django.db import models
 from django.core.validators import MaxValueValidator
 from datetime import datetime, timedelta
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Infrastructure(models.Model):
     nom = models.CharField(max_length=16)

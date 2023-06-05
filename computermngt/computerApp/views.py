@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from computerApp.models import Machine,Personnel, Infrastructure
-from .forms import AddMachineForm, DeleteMachineForm, AddUserForm, DeleteUserForm, MachineForm
+from .forms import AddMachineForm, DeleteMachineForm, AddUserForm, DeleteUserForm, MachineForm, LoginForm
 from django.http import JsonResponse
-
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def index(request) :
@@ -18,7 +19,9 @@ machine_crea = False
 machine_del = False 
 user_crea = False 
 user_del = False 
+co_wrong = False
 
+@login_required
 def menu(request):
     machines = Machine.objects.all()
     users = Personnel.objects.all()
@@ -55,8 +58,7 @@ def menu(request):
     }
 
     return render(request, 'computerApp/menu.html', context)
-
-
+@login_required
 def machine_gestion_form(request):
     machines = Machine.objects.all()
 
@@ -106,9 +108,7 @@ def machine_gestion_form(request):
     }
     
     return render(request, 'computerApp/gerer/gestion_machines.html', context)
-
-
-
+@login_required
 def user_gestion_form(request):
      users = Personnel.objects.all()
 
@@ -153,22 +153,16 @@ def user_gestion_form(request):
 	}
      
      return render(request, 'computerApp/gerer/gestion_users.html',context)
-
+@login_required
 def infra_gestion_form(request):
      infras = Infrastructure.objects.all()
      context = {
 		'infras': infras
 	}
      return render(request, 'computerApp/gerer/gestion_infra.html',context)
-
-def ajouter_machine(request):
-	machines = Machine.objects.all()
-	context = {
-		'machines': machines
-	}
-	return render(request, 'computerApp/gerer/ajouter_machine.html',context)
-
+@login_required
 def machines(request):
+
     form = MachineForm()  # Créez une instance du formulaire en dehors du bloc if
     
     if request.method == 'POST':
@@ -184,3 +178,44 @@ def machines(request):
     }
     
     return render(request, 'computerApp/gerer/machines.html', context)
+@login_required
+def login_view(request):
+
+    co_wrong = request.session.get('co_wrong', False)
+
+    request.session['co_wrong'] = False
+
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data['username']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('menu')  # Redirigez l'utilisateur vers la page menu après la connexion
+            else:
+                form.add_error(None, 'Identifiant ou mot de passe incorrect.')
+                request.session['co_wrong'] = True
+    else:
+        form = LoginForm()
+    
+    context = {
+        'form': form,
+        'co_wrong' : co_wrong,
+        'co_wrong': request.session.get('co_wrong', False),
+    }
+    
+    return render(request, 'computerApp/login.html', context)
+
+@login_required
+def profils(request):
+    user = request.user
+    user_attributes = user.__dict__
+
+    context = {
+        'user_attributes': user_attributes,
+    }
+
+    return render(request, 'computerApp/gerer/profils.html', context)
+
