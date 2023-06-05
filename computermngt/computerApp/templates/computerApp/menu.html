@@ -38,6 +38,20 @@
     {%endblock%}
 
     {% block content%}
+
+{% if machine_crea %}
+    <p class="alert alert-success">La machine a été créée avec succès.</p>
+{% endif %}
+{% if machine_del %}
+    <p class="alert alert-danger">La machine a été supprimée avec succès.</p>
+{% endif %}
+{% if user_crea %}
+    <p class="alert alert-success">L'utilisateur a été créée avec succès.</p>
+{% endif %}
+{% if user_del %}
+    <p class="alert alert-danger">L'utilisateur a été supprimée avec succès.</p>
+{% endif %}
+
     <div class="container">
       <h1>Tableau de bord - Overview</h1>
       
