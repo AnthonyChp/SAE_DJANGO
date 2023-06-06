@@ -13,13 +13,16 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
-            <li><a href="../menu">Overview</a></li>
-            <li><a href="../menu/gestion-infra">Infrastructure</a></li>
-            <li><a href="../menu/gestion-user">Utilisateurs</a></li>
-            <li class="active"><a href="">Gestion de machines</a></li>
-            <li><a href="../menu/machines">Machines</a></li>
-            <li><a href="../menu/profils">Profils</a></li>
+            <li><a href="{% url 'menu' %}">Overview</a></li>
+            <li><a href="{% url 'gestion-infra' %}">Infrastructure</a></li>
+            <li><a href="{% url 'gestion-user' %}">Utilisateurs</a></li>
+            <li class="active"><a href="{% url 'gestion-machines' %}">Gestion de machines</a></li>
+            <li><a href="{% url 'machines' %}">Machines</a></li>
+            <li><a href="{% url 'profils' %}">Profils</a></li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+        </ul>
         </div>
       </div>
     </nav>
@@ -59,13 +62,15 @@
           <div class="mb-3">
             <label for="{{ form.infra.id_for_label }}" class="form-label">Dans l'infrastructure</label>
             {{ form.infra }}
-          </div>
           <div class="text-center">
             <button type="submit" class="btn btn-primary">Ajouter</button>
           </div>
         </form>
       </div>
     </div>
+  </div>
+</div>
+
 
     <div class="col-md-6">
       <div class="card p-4">

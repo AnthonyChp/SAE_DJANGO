@@ -14,7 +14,6 @@ class Infrastructure(models.Model):
     def __str__(self) :
         return self.nom
 
-
 class Personnel(models.Model):
     ROLES = (
         ('Resp.', 'Resp.'),
@@ -40,7 +39,6 @@ class Personnel(models.Model):
     def __str__(self):
         return self.nom + " " + self.prenom
 
-
 class Machine(models.Model):
     TYPE = (
         ('PC', ('PC - Run windows')),
@@ -57,6 +55,14 @@ class Machine(models.Model):
     appartient = models.ForeignKey(Personnel, on_delete=models.SET_NULL, null=True, blank=False)
     creation = models.DateField(auto_now_add=True)
     infra = models.ForeignKey(Infrastructure, on_delete=models.SET_NULL, null=True, blank=False)
+
+    utilisateur_mise_a_jour = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    date_mise_a_jour = models.DateTimeField(auto_now=True)
+    description = models.TextField(default="/")
+
+    def save(self, *args, **kwargs):
+        self.date_mise_a_jour = datetime.now()
+        super().save(*args, **kwargs)
 
 
     def __str__(self):

@@ -13,19 +13,25 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
-            <li><a href="../menu">Overview</a></li>
+            <li><a href="{% url 'menu' %}">Overview</a></li>
             <li class="active"><a href="">Infrastructure</a></li>
-            <li><a href="../menu/gestion-user">Utilisateurs</a></li>
-            <li><a href="../menu/gestion-machines">Gestion de machines</a></li>
-            <li><a href="../menu/machines">Machines</a></li>
-            <li><a href="../menu/profils">Profils</a></li>
+            <li><a href="{% url 'gestion-user' %}">Utilisateurs</a></li>
+            <li><a href="{% url 'gestion-machines' %}">Gestion de machines</a></li>
+            <li><a href="{% url 'machines' %}">Machines</a></li>
+            <li><a href="{% url 'profils' %}">Profils</a></li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+        </ul>
         </div>
       </div>
     </nav>
 {%endblock%}
 
 {% block content %}
+{% if out_check %}
+    <p class="alert alert-success">Changement de l'état effectué avec succès !</p>
+{% endif %}
 <div class="container">
   <h1 class="mt-5 text-center">Gestion des infrastructures</h1>
   <div class="row">
@@ -38,7 +44,7 @@
           <p class="card-text">Date d'entretien : {{ infra.maintenanceDate }}</p>
           <p class="card-text">Date de création : {{ infra.crea }}</p>
           <div class="text-center">
-          <a href="#" class="btn btn-primary">Voir</a>
+            <a href="#myModal-{{ infra.id }}" class="btn btn-primary" data-toggle="modal">Voir</a>
         </div>
         </div>
       </div>
@@ -46,6 +52,41 @@
     {% endfor %}
   </div>
 </div>
+
+{% for infra in infras %}
+  <!-- Modal for Infrastructure ID {{ infra.id }} -->
+  <div class="modal fade" id="myModal-{{ infra.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myModalLabel">Détails de l'infrastructure</h4>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body text-center">
+          <h5>Nombre de machines dans l'infrastructure : {{ infra.machine_set.count }}</h5>
+          {% if infra.etat %}
+          <form method="POST" action="{% url 'changement_statut_infra' infra.id %}">
+            {% csrf_token %}
+            <button class="btn btn-danger">Mettre hors tension</button>
+          </form> 
+          {% else %}
+          <form method="POST" action="{% url 'changement_statut_infra' infra.id %}">
+            {% csrf_token %}
+            <button class="btn btn-success">Activer</button>
+          </form> 
+          {% endif %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endfor %}
+
+
 
 
 {% endblock %}

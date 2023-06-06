@@ -4,6 +4,8 @@ from .forms import AddMachineForm, DeleteMachineForm, AddUserForm, DeleteUserFor
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from datetime import date
 
 # Create your views here.
 def index(request) :
@@ -43,6 +45,7 @@ def menu(request):
     request.session['user_crea'] = False
     request.session['user_del'] = False
 
+
     context = {
         'machines': machines,
         'users': users,
@@ -57,7 +60,11 @@ def menu(request):
         'user_del' : user_del,
     }
 
-    return render(request, 'computerApp/menu.html', context)
+    if request.user.groups.filter(name='full_access').exists():
+        return render(request, 'computerApp/menu.html', context)
+    else :
+        return render(request, 'computerApp/gerer/error.html', context)
+
 @login_required
 def machine_gestion_form(request):
     machines = Machine.objects.all()
@@ -80,7 +87,7 @@ def machine_gestion_form(request):
                 etat=etat,
                 mach=mach,
                 appartient=appartient,
-                infra=infra
+                infra=infra,
             )
 
             new_machine.save()
@@ -108,6 +115,7 @@ def machine_gestion_form(request):
     }
     
     return render(request, 'computerApp/gerer/gestion_machines.html', context)
+
 @login_required
 def user_gestion_form(request):
      users = Personnel.objects.all()
@@ -151,17 +159,43 @@ def user_gestion_form(request):
         'user_crea': request.session.get('user_crea', False),
         'user_del': request.session.get('user_del', False),
 	}
-     
-     return render(request, 'computerApp/gerer/gestion_users.html',context)
+     if request.user.groups.filter(name='full_access').exists():
+        return render(request, 'computerApp/gerer/gestion_users.html',context)
+     else:
+        return render(request, 'computerApp/gerer/error.html', context)
+
+out_check = False
+
 @login_required
 def infra_gestion_form(request):
+     out_check = request.session.get('out_check', False)
+
+     request.session['out_check'] = False
+
      infras = Infrastructure.objects.all()
      context = {
-		'infras': infras
+		'infras': infras,
+        'out_check' : out_check,
 	}
-     return render(request, 'computerApp/gerer/gestion_infra.html',context)
+     if request.user.groups.filter(name='full_access').exists():
+        return render(request, 'computerApp/gerer/gestion_infra.html',context)
+     else:
+        return render(request, 'computerApp/gerer/error.html', context)
+
+entretien_check = False
+date_check = False
+
 @login_required
 def machines(request):
+
+    # Récupérer la valeur des variables depuis la session
+    entretien_check = request.session.get('entretien_check', False)
+    date_check = request.session.get('date_check', False)
+
+    machines = Machine.objects.all().order_by('maintenanceDate')
+
+    request.session['date_check'] = False
+    request.session['entretien_check'] = False
 
     form = MachineForm()  # Créez une instance du formulaire en dehors du bloc if
     
@@ -170,15 +204,15 @@ def machines(request):
         if form.is_valid():
             form.save()
     
-    machines = Machine.objects.all()
-    
     context = {
         'machines': machines,
         'form': form,
+        'date_check': date_check,
+        'entretien_check' : entretien_check,
     }
     
     return render(request, 'computerApp/gerer/machines.html', context)
-@login_required
+
 def login_view(request):
 
     co_wrong = request.session.get('co_wrong', False)
@@ -193,7 +227,7 @@ def login_view(request):
             user = authenticate(request, username=username, password=password)
             if user is not None:
                 login(request, user)
-                return redirect('menu')  # Redirigez l'utilisateur vers la page menu après la connexion
+                return redirect('../menu/profils')  # Redirigez l'utilisateur vers la page menu après la connexion
             else:
                 form.add_error(None, 'Identifiant ou mot de passe incorrect.')
                 request.session['co_wrong'] = True
@@ -218,4 +252,72 @@ def profils(request):
     }
 
     return render(request, 'computerApp/gerer/profils.html', context)
+
+@login_required
+def changement_statut(request, machine_id):
+    # Récupérer la machine correspondant à l'ID
+    try:
+        machine = Machine.objects.get(id=machine_id)
+    except Machine.DoesNotExist:
+        # Gérer le cas où la machine n'existe pas
+        return render(request, 'computerApp/machine_not_found.html')
+
+    # Inverser le statut de la machine
+    machine.etat = not machine.etat
+    machine.save()
+    request.session['date_check'] = True
+
+    context = {
+        'machines': machines,
+        'date_check': request.session.get('date_check', False),
+    }
+
+    # Rediriger vers la page des machines
+    return redirect('machines')
+    
+
+@login_required
+def changement_entretient(request, machine_id):
+    machine = get_object_or_404(Machine, id=machine_id)
+
+    if request.method == 'POST':
+        description = request.POST.get('description', '') # Récupérer la valeur de la description depuis la requête POST
+        machine.description = description
+
+        machine.maintenanceDate = timezone.now() + timezone.timedelta(weeks=1)
+        machine.utilisateur_mise_a_jour = request.user
+        machine.date_mise_a_jour = timezone.now()
+        machine.save()
+        request.session['entretien_check'] = True
+    machines = Machine.objects.all()
+    context = {
+        'machines': machines,
+        'entretien_check': request.session.get('entretien_check', False),
+    }
+
+    return redirect('machines')
+
+@login_required
+def changement_statut_infra(request, infra_id):
+    # Récupérer la machine correspondant à l'ID
+    try:
+        infras = Infrastructure.objects.get(id=infra_id)
+    except Machine.DoesNotExist:
+        # Gérer le cas où la machine n'existe pas
+        return render(request, 'computerApp/machine_not_found.html')
+
+    # Inverser le statut de la machine
+    infras.etat = not infras.etat
+    infras.save()
+
+    request.session['out_check'] = True
+
+    context = {
+        'infras': infras,
+        'out_check': request.session.get('out_check', False),
+    }
+
+    # Rediriger vers la page des machines
+    return redirect('gestion-infra')
+
 

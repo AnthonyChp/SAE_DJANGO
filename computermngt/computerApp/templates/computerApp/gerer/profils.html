@@ -9,17 +9,20 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="../menu">R&T D___evelopment</a>
+          <a class="navbar-brand" href="{% url 'menu' %}">R&T D___evelopment</a>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
-            <li><a href="../menu">Overview</a></li>
-            <li><a href="../menu/gestion-infra">Infrastructure</a></li>
-            <li><a href="../menu/gestion-user">Utilisateurs</a></li>
-            <li><a href="../menu/gestion-machines">Gestion de machines</a></li>
-            <li><a href="../menu/machines">Machines</a></li>
-            <li class="active"><a href="">Profils</a></li>
+            <li><a href="{% url 'menu' %}">Overview</a></li>
+            <li><a href="{% url 'gestion-infra' %}">Infrastructure</a></li>
+            <li><a href="{% url 'gestion-user' %}">Utilisateurs</a></li>
+            <li><a href="{% url 'gestion-machines' %}">Gestion de machines</a></li>
+            <li><a href="{% url 'machines' %}">Machines</a></li>
+            <li class="active"><a href="{% url 'profils' %}">Profils</a></li>
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+        </ul>
         </div>
       </div>
     </nav>
