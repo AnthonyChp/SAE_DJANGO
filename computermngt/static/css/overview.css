@@ -1,0 +1,99 @@
+@font-face {
+    font-family: "LondonPolice";
+    src: url('../police/LondonBoutique.otf');
+}
+
+.navbar-brand  {
+    font-family: "LondonPolice", sans-serif !important;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+  }
+
+  .container {
+    padding-top: 30px;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+
+  h5 {
+    text-align: center;
+  }
+
+  .card-body p {
+    text-align: center;
+  }
+  
+  .add-machine-button {
+    display: flex;
+    align-items: center;
+  }
+
+  .add-machine-button img {
+    width: 30px;
+    height: 30px;
+    margin-bottom: 1px;
+  }
+
+  .card {
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  .card-text {
+    font-size: 14px;
+  }
+
+  .table {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .table thead th {
+    background-color: #f1f1f1;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border-top: none;
+  }
+
+  .table tbody td {
+    font-size: 14px;
+    vertical-align: middle;
+    border-top: none;
+  }
+
+  .online {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: green;
+  }
+
+  .offline {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: red;
+  }
+
+  .afaire {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: orange;
+  }
