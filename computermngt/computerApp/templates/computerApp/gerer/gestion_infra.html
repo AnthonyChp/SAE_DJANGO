@@ -32,6 +32,9 @@
 {% if out_check %}
     <p class="alert alert-success">Changement de l'état effectué avec succès !</p>
 {% endif %}
+{% if entretien_check_infra %}
+    <p class="alert alert-success">L'entetien a bien était effectué !</p>
+{% endif %}
 <div class="container">
   <h1 class="mt-5 text-center">Gestion des infrastructures</h1>
   <div class="row">
@@ -54,40 +57,59 @@
 </div>
 
 {% for infra in infras %}
-  <!-- Modal for Infrastructure ID {{ infra.id }} -->
-  <div class="modal fade" id="myModal-{{ infra.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" id="myModalLabel">Détails de l'infrastructure</h4>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+        <!-- Modal for Infrastructure ID {{ infra.id }} -->
+        <div class="modal fade" id="myModal-{{ infra.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel">Détails de l'infrastructure</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <h2>{{ infra.nom }}</h2>
+                        <h5>Nombre de machines dans l'infrastructure : {{ infra.machine_set.count }}</h5>
+                        <h5>Appartient à : <strong>{{infra.utilisateur}}</strong></h5>
+                        {% if infra.etat %}
+                            <form method="POST" action="{% url 'changement_statut_infra' infra.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-danger">Mettre hors tension</button>
+                            </form>
+                        {% else %}
+                            <form method="POST" action="{% url 'changement_statut_infra' infra.id %}">
+                                {% csrf_token %}
+                                <button class="btn btn-success">Activer</button>
+                            </form>
+                        {% endif %}
+                        <form method="POST" action="{% url 'changement_entretient_infra' infra.id %}">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="description">Description</label>
+                                <input type="text" class="form-control" id="description" name="description" value="{{ infra.description }}">
+                            </div>
+                            <button type="submit" class="btn btn-primary">Faire l'entretien</button>
+                        </form>
+
+                        <h4>Historique des mises à jour :</h4>
+                        <ul class="list-group">
+                            {% for update in infra.updates.all %}
+                                <li class="list-group-item">
+                                    <strong>Utilisateur :</strong> {{ update.utilisateur_mise_a_jour }}
+                                    <br>
+                                    <strong>Date :</strong> {{ update.date_mise_a_jour }}
+                                    <br>
+                                    <strong>Description :</strong> {{ update.description }}
+                                </li>
+                                gh
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="modal-body text-center">
-          <h5>Nombre de machines dans l'infrastructure : {{ infra.machine_set.count }}</h5>
-          {% if infra.etat %}
-          <form method="POST" action="{% url 'changement_statut_infra' infra.id %}">
-            {% csrf_token %}
-            <button class="btn btn-danger">Mettre hors tension</button>
-          </form> 
-          {% else %}
-          <form method="POST" action="{% url 'changement_statut_infra' infra.id %}">
-            {% csrf_token %}
-            <button class="btn btn-success">Activer</button>
-          </form> 
-          {% endif %}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
-        </div>
-      </div>
-    </div>
-  </div>
-{% endfor %}
-
-
-
-
+    {% endfor %}
 {% endblock %}
-

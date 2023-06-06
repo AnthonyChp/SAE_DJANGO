@@ -84,8 +84,7 @@
                 <input type="text" class="form-control" id="description" name="description" value="{{ machine.description }}">
             </div>
             <button type="submit" class="btn btn-primary">Faire l'entretien</button>
-        </form>
-        
+          </form>
           <form method="POST" action="{% url 'changement_statut' machine.id %}">
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Changer de statut</button>

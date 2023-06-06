@@ -18,11 +18,11 @@
 
       <div class="rectangle">
         <h1>R&T D___evelopment</h1>
-        <a href="login"><div id="account"></div></a>
+        <a href="{% url 'login' %}"><div id="account"></div></a>
         <div id="langue">FR <div>EN</div></div>
         <nav>
             <ul>
-                <li><a href="#Presentation">Mon compte</a></li>
+                <li><a href="{% url 'login' %}">Mon compte</a></li>
                 <li><a href="#Connaissances">Nos services</a></li>
                 <li><a href="#Projets">Nous contacter</a></li>
                 <li><a href="#">À propos</a></li>

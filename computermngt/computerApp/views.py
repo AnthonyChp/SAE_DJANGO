@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from computerApp.models import Machine,Personnel, Infrastructure
+from computerApp.models import Machine,Personnel, Infrastructure, Update
 from .forms import AddMachineForm, DeleteMachineForm, AddUserForm, DeleteUserForm, MachineForm, LoginForm
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
@@ -165,22 +165,34 @@ def user_gestion_form(request):
         return render(request, 'computerApp/gerer/error.html', context)
 
 out_check = False
+entretien_check_infra = False
 
 @login_required
 def infra_gestion_form(request):
-     out_check = request.session.get('out_check', False)
+    out_check = request.session.get('out_check', False)
+    entretien_check_infra = request.session.get('entretien_check_infra', False)
 
-     request.session['out_check'] = False
+    request.session['out_check'] = False
+    request.session['entretien_check_infra'] = False
 
-     infras = Infrastructure.objects.all()
-     context = {
-		'infras': infras,
-        'out_check' : out_check,
-	}
-     if request.user.groups.filter(name='full_access').exists():
-        return render(request, 'computerApp/gerer/gestion_infra.html',context)
-     else:
+    infras = Infrastructure.objects.all()
+
+    for infra in infras:
+        updates = Update.objects.filter(infrastructure=infra).order_by('date_mise_a_jour')
+        infra.updates.set(updates)
+
+    context = {
+        'infras': infras,
+        'out_check': out_check,
+        'entretien_check_infra': entretien_check_infra,
+    }
+
+    if request.user.groups.filter(name='full_access').exists():
+        return render(request, 'computerApp/gerer/gestion_infra.html', context)
+    else:
         return render(request, 'computerApp/gerer/error.html', context)
+
+
 
 entretien_check = False
 date_check = False
@@ -267,15 +279,9 @@ def changement_statut(request, machine_id):
     machine.save()
     request.session['date_check'] = True
 
-    context = {
-        'machines': machines,
-        'date_check': request.session.get('date_check', False),
-    }
-
     # Rediriger vers la page des machines
     return redirect('machines')
     
-
 @login_required
 def changement_entretient(request, machine_id):
     machine = get_object_or_404(Machine, id=machine_id)
@@ -289,11 +295,6 @@ def changement_entretient(request, machine_id):
         machine.date_mise_a_jour = timezone.now()
         machine.save()
         request.session['entretien_check'] = True
-    machines = Machine.objects.all()
-    context = {
-        'machines': machines,
-        'entretien_check': request.session.get('entretien_check', False),
-    }
 
     return redirect('machines')
 
@@ -309,15 +310,23 @@ def changement_statut_infra(request, infra_id):
     # Inverser le statut de la machine
     infras.etat = not infras.etat
     infras.save()
-
     request.session['out_check'] = True
-
-    context = {
-        'infras': infras,
-        'out_check': request.session.get('out_check', False),
-    }
 
     # Rediriger vers la page des machines
     return redirect('gestion-infra')
 
+@login_required
+def changement_entretient_infra(request, infra_id):
+    infra = get_object_or_404(Infrastructure, id=infra_id)
 
+    if request.method == 'POST':
+        description = request.POST.get('description', '') # Récupérer la valeur de la description depuis la requête POST
+        infra.description = description
+
+        infra.maintenanceDate = timezone.now() + timezone.timedelta(weeks=1)
+        infra.utilisateur_mise_a_jour = request.user
+        infra.date_mise_a_jour = timezone.now()
+        infra.save()
+        request.session['entretien_check_infra'] = True
+
+    return redirect('gestion-infra')
