@@ -1,0 +1,234 @@
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+      <title>Menu</title>
+      {% load static%}
+      <link rel="stylesheet" href="{% static 'css/overview.css' %}">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+  </head>
+
+<body>
+    {% block navbar%}
+    <nav class="navbar navbar-inverse navbar-fixed-">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="{% url 'menu' %}">R&T D___evelopment</a>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="{% url 'menu' %}">Overview</a></li>
+            <li><a href="{% url 'gestion-infra' %}">Infrastructure</a></li>
+            <li><a href="{% url 'gestion-user' %}">Utilisateurs</a></li>
+            <li><a href="{% url 'gestion-machines' %}">Gestion de machines</a></li>
+            <li><a href="{% url 'machines' %}">Machines</a></li>
+            <li ><a href="{% url 'profils' %}">Profils</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="{% url 'logout' %}">Déconnexion</a></li>
+        </ul>
+        
+        </div>
+      </div>
+    </nav>
+    {%endblock%}
+
+    {% block content%}
+
+{% if machine_crea %}
+    <p class="alert alert-success">La machine a été créée avec succès.</p>
+{% endif %}
+{% if machine_del %}
+    <p class="alert alert-danger">La machine a été supprimée avec succès.</p>
+{% endif %}
+{% if user_crea %}
+    <p class="alert alert-success">L'utilisateur a été créée avec succès.</p>
+{% endif %}
+{% if user_del %}
+    <p class="alert alert-danger">L'utilisateur a été supprimée avec succès.</p>
+{% endif %}
+
+    <div class="container">
+      <h1>Tableau de bord - Overview</h1>
+      
+      <div class="row">
+        <div class="col-lg-3 col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Machines</h5>
+              <p class="card-text">Nombre total de machines : <span id="totalMachines">{{ count_machi }}</span></p>
+              <p class="card-text">Machines actives : <span id="activeMachines">{{count_onMach}}</span></p>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Utilisateurs</h5>
+              <p class="card-text">Nombre total d'utilisateurs : <span id="totalUsers">{{count_user}}</span></p>
+              <p class="card-text">Nombre total de responsable : <span id="activeUsers">{{count_rep}}</span></p>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-3 col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Infrastructure</h5>
+
+              {% for infra in infras %}
+              <p class="card-text">{{infra.nom}}</p>
+              {% endfor %}
+
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-3 col-md-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Ajout de machines</h5>
+              {%load static%}
+              <p class="card-text"><a href="menu/gestion-machines" class="btn btn-primary add-machine-button"><img src="{%static 'computerApp/images/add_blanc.png'%}"></a></p>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row mt-4">
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Infrastructure</h5>
+              <table class="table">
+                <thead>
+
+                  <tr>
+                    <th>Nom</th>
+                    <th>État</th>
+                    <th>Date entretient</th>
+                    <th>Date de création</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+
+                  {% for infra in infras %}
+                  <tr>
+                    <td>{{infra.nom}}</td>
+                    {% if infra.etat == True %}
+                      <td><span class="online"></span> En ligne</td>
+                    {% else %}
+                      <td><span class="offline"></span> Hors ligne</td>
+                    {% endif %}
+                    <td>{{infra.maintenanceDate}}</td>
+                    <td>{{infra.crea}}</td>
+                  </tr>
+                  {% endfor %}
+                  
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+  
+        <div class="col-lg-6">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Utilisateurs</h5>
+              <table class="table">
+                <thead>
+
+                  <tr>
+                    <th>Nom - Prénom</th>
+                    <th>Adresse e-mail</th>
+                    <th>Rôle</th>
+                    <th>Date de création</th>
+                  </tr>
+
+                </thead>
+                <tbody>
+
+                  {% for user in users %}
+                  <tr>
+                    <td>{{ user.nom }} {{ user.prenom }}</td>
+                    <td>{{ user.email}}</td>
+
+                    {% if user.role == 'Employé' %}
+                      <td>{{ user.role }}</td>
+                    {% else %}
+                      <td>{{ user.role }}{{ user.infrastructure }}</td>
+                    {% endif %}
+                    <td>{{user.crea}}</td>
+                  </tr>
+                  {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-lg-12 table-container">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Machines</h5>
+              <table class="table">
+                <thead>
+
+                  <tr>
+                    <th>Nom</th>
+                    <th>État</th>
+                    <th>Mise à jour</th>
+                    <th>Appartient</th>
+                    <th>Date de création</th>
+
+                  </tr>
+
+                </thead>
+                <tbody>
+
+                  {% for machine in machines %}
+                  <tr>
+                    <td>{{ machine.nom }}</td>
+
+                    {% if machine.etat == True %}
+                      <td><span class="online"></span> En ligne</td>
+                    {% else %}
+                      <td><span class="offline"></span> Hors ligne</td>
+                    {% endif %}
+                    <td>{{machine.maintenanceDate}}</td>
+                    <td>{{machine.appartient}}</td>
+                    <td>{{machine.creation}}</td>
+                  </tr>
+                  {% endfor %}
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  {%endblock%}
+
+  {% block Script %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  {%endblock%}
+
+
+
+</body>
+</html>
