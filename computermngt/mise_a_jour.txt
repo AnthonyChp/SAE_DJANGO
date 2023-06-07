@@ -6,3 +6,5 @@ les infras afin de pouvoir les shutdown
 admin -> peut changer le role d'un user
 
 ajout de la page profils ducoup
+
+-> modifier personnel et infra pour que ce soit propre
