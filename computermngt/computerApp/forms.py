@@ -21,6 +21,7 @@ class AddMachineForm(forms.Form):
    mach = forms.ChoiceField(choices=TYPE, required=False)
    appartient = forms.ModelChoiceField(queryset=Personnel.objects.all(), required=True, label='Appartient à')
    infra = forms.ModelChoiceField(queryset=Infrastructure.objects.all(), required=True, label='Dans quel infrastructure')
+   adresse_ip = forms.CharField(required=False, label='Adresse IP', initial='0.0.0.0')
 
 
 class DeleteMachineForm(forms.Form):

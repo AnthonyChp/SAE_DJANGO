@@ -36,6 +36,9 @@
 {% if date_check %}
     <p class="alert alert-success">L'état de la machine à était changée avec succès !</p>
 {% endif %}
+{% if mod_check %}
+    <p class="alert alert-success">La machine à bien subit des modifications !</p>
+{% endif %}
 
 <div class="container">
     <h1 class="mt-5 text-center">Liste des Machines</h1>
@@ -75,6 +78,7 @@
           <p>Infrastructure: {{ machine.infra }}</p>
           <p>Statut: {% if machine.etat %}<span class="online"></span> En ligne {% else %}<span class="offline"></span> Hors ligne {% endif %}</p>
           <p>Appartient à: {{ machine.appartient }}</p>
+          <p>Adresse IP: {{ machine.adresse_ip }}</p>
           <p>Date de l'entretien : {{ machine.maintenanceDate }}</p>
           <p>Dernière mise à jour faite par :<strong> {{ machine.utilisateur_mise_a_jour }} le {{ machine.date_mise_a_jour }}</strong></p>
           <form method="POST" action="{% url 'changement_entretient' machine.id %}">
@@ -89,6 +93,10 @@
             {% csrf_token %}
             <button type="submit" class="btn btn-primary">Changer de statut</button>
           </form>
+          <form method="POST" action="{% url 'modifier_machine' machine.id %}">
+            {% csrf_token %}
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modifierModal-{{ machine.id }}">Modifier la machine</button>
+          </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
@@ -96,6 +104,39 @@
       </div>
     </div>
   </div>
+{% endfor %}
+
+{% for machine in machines %}
+<!-- Modal for nom et adresse ip de la Machine ID {{ machine.id }} -->
+<div class="modal fade" id="modifierModal-{{ machine.id }}" tabindex="-1" role="dialog" aria-labelledby="modifierModalLabel-{{ machine.id }}">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="modifierModalLabel-{{ machine.id }}">Modifier la machine</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form method="POST" action="{% url 'modifier_machine' machine.id %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label for="nom">Nom de la machine</label>
+            <input type="text" class="form-control" id="nom" name="nom" value="{{ machine.nom }}">
+          </div>
+          <div class="form-group">
+            <label for="adresse_ip">Adresse IP</label>
+            <input type="text" class="form-control" id="adresse_ip" name="adresse_ip" value="{{ machine.adresse_ip }}">
+          </div>
+          <button type="submit" class="btn btn-primary">Enregistrer</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endfor %}
 
 <div class="container">

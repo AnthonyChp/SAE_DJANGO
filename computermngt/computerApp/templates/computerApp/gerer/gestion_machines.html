@@ -30,68 +30,69 @@
     
 {% block content %}
 
-<h1>Tableau de bord - Gestion de machines</h1>
+<h1 class="text-center">Tableau de bord - Gestion de machines</h1>
 
 <div class="container">
-  <div class="row justify-content-center align-items-center vh-100">
-    <div class="col-md-6">
-      <div class="card p-4">
-        <h1 class="mt-5 text-center">Ajouter une machine</h1>
-        <form method="post" class="my-4">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="{{ form.nom.id_for_label }}" class="form-label">Nom de la machine</label>
-            {{ form.nom }}
-          </div>
-          <div class="mb-3">
-            <label for="{{ form.maintenanceDate.id_for_label }}" class="form-label">Date de maintenance</label>
-            {{ form.maintenanceDate }}
-          </div>
-          <div class="mb-3">
-            <label for="{{ form.etat.id_for_label }}" class="form-label">État de la machine</label>
-            {{ form.etat }}
-          </div>
-          <div class="mb-3">
-            <label for="{{ form.mach.id_for_label }}" class="form-label">Type de machine</label>
-            {{ form.mach }}
-          </div>
-          <div class="mb-3">
-            <label for="{{ form.appartient.id_for_label }}" class="form-label">Appartient à</label>
-            {{ form.appartient }}
-          </div>
-          <div class="mb-3">
-            <label for="{{ form.infra.id_for_label }}" class="form-label">Dans l'infrastructure</label>
-            {{ form.infra }}
-          <div class="text-center">
-            <button type="submit" class="btn btn-primary">Ajouter</button>
-          </div>
-        </form>
-      </div>
+    <div class="row justify-content-center align-items-center vh-100">
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h2 class="mt-5 text-center">Ajouter une machine</h2>
+                <form method="post" class="my-4">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.nom.id_for_label }}" class="form-label">Nom de la machine</label>
+                        {{ form.nom }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.maintenanceDate.id_for_label }}" class="form-label">Date de maintenance</label>
+                        {{ form.maintenanceDate }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.etat.id_for_label }}" class="form-label">État de la machine</label>
+                        {{ form.etat }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.mach.id_for_label }}" class="form-label">Type de machine</label>
+                        {{ form.mach }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.appartient.id_for_label }}" class="form-label">Appartient à</label>
+                        {{ form.appartient }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.infra.id_for_label }}" class="form-label">Dans l'infrastructure</label>
+                        {{ form.infra }}
+                    </div>
+                    <div class="mb-3">
+                      <label for="{{ form.adresse_ip.id_for_label }}" class="form-label">Adresse IP de la machine</label>
+                      {{ form.adresse_ip }}
+                  </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">Ajouter</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h2 class="mt-5 text-center">Supprimer des machines</h2>
+                <form method="POST" action="{% url 'gestion-machines' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="machine" class="form-label">Machine :</label>
+                        <select name="machine" class="form-select">
+                            {% for machine in machines %}
+                            <option value="{{ machine.id }}">{{ machine.nom }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
-</div>
-
-
-    <div class="col-md-6">
-      <div class="card p-4">
-        <h2 class="mt-5 text-center">Supprimer des machines</h2>
-        <form method="POST" action="{% url 'gestion-machines' %}">
-          {% csrf_token %}
-          <div class="mb-3">
-            <label for="machine" class="form-label">Machine :</label>
-            <select name="machine" class="form-select">
-              {% for machine in machines %}
-              <option value="{{ machine.id }}">{{ machine.nom }}</option>
-              {% endfor %}
-            </select>
-          </div>
-          <div class="text-center">
-            <button type="submit" class="btn btn-danger">Supprimer</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
 </div>
 
 {% endblock %}

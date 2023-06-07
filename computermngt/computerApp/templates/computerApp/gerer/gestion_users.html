@@ -36,14 +36,13 @@
     <div class="col-md-4">
       <div class="card mb-4">
         <div class="card-body">
+          <br>
           <h5 class="card-title">{{ user.nom }} {{user.prenom}}</h5>
           <p class="card-text">Infrastructure : {{ user.infrastructure }}</p>
           <p class="card-text">Statut : {% if user.role == 'Resp.' %} {{user.role}} {{user.infrastructure}}{% else %}{{user.role}} à {{user.infrastructure}}{% endif %}</p>
           <p class="card-text">Contact : {{ user.email }}</p>
           <p class="card-text">Date de création : {{ user.crea }}</p>
-          <div class="text-center">
-          <a href="#" class="btn btn-primary">Voir</a>
-        </div>
+          <br>
         </div>
       </div>
     </div>

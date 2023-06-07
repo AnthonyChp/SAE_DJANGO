@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from computerApp.models import Machine,Personnel, Infrastructure, Update
+from computerApp.models import Machine,Personnel, Infrastructure
 from .forms import AddMachineForm, DeleteMachineForm, AddUserForm, DeleteUserForm, MachineForm, LoginForm
 from django.http import JsonResponse
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import date
+
+def page_non_trouvee(request, exception):
+    return render(request, 'computerApp/404.html', status=404)
 
 # Create your views here.
 def index(request) :
@@ -80,6 +83,7 @@ def machine_gestion_form(request):
             mach = form.cleaned_data['mach']
             appartient = form.cleaned_data['appartient']
             infra = form.cleaned_data['infra']
+            adresse_ip = form.cleaned_data['adresse_ip']
             
             new_machine = Machine(
                 nom=nom,
@@ -88,6 +92,7 @@ def machine_gestion_form(request):
                 mach=mach,
                 appartient=appartient,
                 infra=infra,
+                adresse_ip=adresse_ip
             )
 
             new_machine.save()
@@ -175,11 +180,7 @@ def infra_gestion_form(request):
     request.session['out_check'] = False
     request.session['entretien_check_infra'] = False
 
-    infras = Infrastructure.objects.all()
-
-    for infra in infras:
-        updates = Update.objects.filter(infrastructure=infra).order_by('date_mise_a_jour')
-        infra.updates.set(updates)
+    infras = Infrastructure.objects.all().order_by('maintenanceDate')
 
     context = {
         'infras': infras,
@@ -192,10 +193,9 @@ def infra_gestion_form(request):
     else:
         return render(request, 'computerApp/gerer/error.html', context)
 
-
-
 entretien_check = False
 date_check = False
+mod_check = False
 
 @login_required
 def machines(request):
@@ -203,11 +203,13 @@ def machines(request):
     # Récupérer la valeur des variables depuis la session
     entretien_check = request.session.get('entretien_check', False)
     date_check = request.session.get('date_check', False)
+    mod_check = request.session.get('mod_check', False)
 
     machines = Machine.objects.all().order_by('maintenanceDate')
 
     request.session['date_check'] = False
     request.session['entretien_check'] = False
+    request.session['mod_check'] = False
 
     form = MachineForm()  # Créez une instance du formulaire en dehors du bloc if
     
@@ -221,6 +223,7 @@ def machines(request):
         'form': form,
         'date_check': date_check,
         'entretien_check' : entretien_check,
+        'mod_check' : mod_check,
     }
     
     return render(request, 'computerApp/gerer/machines.html', context)
@@ -330,3 +333,23 @@ def changement_entretient_infra(request, infra_id):
         request.session['entretien_check_infra'] = True
 
     return redirect('gestion-infra')
+
+@login_required
+def modifier_machine(request, machine_id):
+    machine = Machine.objects.get(id=machine_id)
+
+    if request.method == 'POST':
+        # Récupérer les valeurs modifiées depuis le formulaire
+        nom = request.POST.get('nom')
+        adresse_ip = request.POST.get('adresse_ip')
+
+        # Mettre à jour les valeurs de la machine
+        machine.nom = nom
+        machine.adresse_ip = adresse_ip
+        machine.save()
+        request.session['mod_check'] = True
+
+        # Rediriger l'utilisateur vers une page appropriée après la modification
+        return redirect('machines')
+
+    return render(request, 'modifier_machine.html', {'machine': machine})

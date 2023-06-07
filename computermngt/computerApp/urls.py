@@ -14,7 +14,10 @@ urlpatterns = [
     path('changement_entretient_infra/<int:infra_id>/', views.changement_entretient_infra, name='changement_entretient_infra'),
     path('menu/gestion-user/',views.user_gestion_form,name='gestion-user'),
     path('menu/machines', views.machines,name='machines'),
+    path('modifier-machine/<int:machine_id>/', views.modifier_machine, name='modifier_machine'),
     path('changement_statut/<int:machine_id>/', views.changement_statut, name='changement_statut'),
     path('changement_entretient/<int:machine_id>/', views.changement_entretient, name='changement_entretient'),
     path('menu/profils', views.profils,name='profils'),
     ]
+
+handler404 = 'computerApp.views.page_non_trouvee'
